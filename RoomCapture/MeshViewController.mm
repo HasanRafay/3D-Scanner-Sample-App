@@ -68,7 +68,9 @@ enum MeasurementState {
      Measurement_Point5,
      Measurement_Point6,
     // Rafay editing close
-    Measurement_Done1
+    Measurement_Done1,
+    Measurement_Done2,
+    Measurement_Done3
 };
 
 @interface MeshViewController ()
@@ -84,7 +86,9 @@ enum MeasurementState {
     float _cameraFovBeforeUserInteractions;
     float _cameraAspectRatioBeforeUserInteractions;
     
-    UILabel *_rulerText;
+    UILabel *_ruler1Text;
+    UILabel *_ruler2Text;
+    UILabel *_ruler3Text;
     UIImageView * _circle1;
     UIImageView * _circle2;
     // Rafay editing start
@@ -164,12 +168,28 @@ enum MeasurementState {
         [self.measurementButton applyCustomStyleWithBackgroundColor:blueButtonColorWithAlpha];
         [self.measurementGuideLabel applyCustomStyleWithBackgroundColor:blackLabelColorWithLightAlpha];
         
-        _rulerText = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
-        [_rulerText applyCustomStyleWithBackgroundColor:blackLabelColorWithAlpha];
+        _ruler1Text = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+        [_ruler1Text applyCustomStyleWithBackgroundColor:blackLabelColorWithAlpha];
         
-        _rulerText.textAlignment = NSTextAlignmentCenter;
-        [self.view addSubview:_rulerText];
-        [self.view sendSubviewToBack:_rulerText];
+        _ruler1Text.textAlignment = NSTextAlignmentCenter;
+        [self.view addSubview:_ruler1Text];
+        [self.view sendSubviewToBack:_ruler1Text];
+        
+        // Rafay added start
+        _ruler2Text = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+        [_ruler2Text applyCustomStyleWithBackgroundColor:blackLabelColorWithAlpha];
+        
+        _ruler2Text.textAlignment = NSTextAlignmentCenter;
+        [self.view addSubview:_ruler2Text];
+        [self.view sendSubviewToBack:_ruler2Text];
+        
+        _ruler3Text = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
+        [_ruler3Text applyCustomStyleWithBackgroundColor:blackLabelColorWithAlpha];
+        
+        _ruler3Text.textAlignment = NSTextAlignmentCenter;
+        [self.view addSubview:_ruler3Text];
+        [self.view sendSubviewToBack:_ruler3Text];
+        // Rafay added close
         
         _circle1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"innerCircle.png"]];
         _circle2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"innerCircle.png"]];
@@ -622,14 +642,78 @@ enum MeasurementState {
             bool ptCenterOnScreen = [self point3dToScreenPoint:GLKVector3MultiplyScalar(GLKVector3Add(_pt1, _pt2), 0.5) screenPt:onScreenCenter];
             
             if (ptCenterOnScreen)
-                [self updateViewWith2DPosition:_rulerText onScreenPt:onScreenCenter];
+                [self updateViewWith2DPosition:_ruler1Text onScreenPt:onScreenCenter];
             else
-                _rulerText.hidden = true;
+                _ruler1Text.hidden = true;
+        }
+    }
+    else if (_measurementState == Measurement_Point3 || _measurementState == Measurement_Done2)
+    {
+        GLKVector2 onScreenPt3;
+        bool pt3OnScreen = [self point3dToScreenPoint:_pt3 screenPt:onScreenPt3];
+        
+        if (pt3OnScreen)
+            [self updateViewWith2DPosition:_circle3 onScreenPt:onScreenPt3];
+        else
+            _circle3.hidden = true;
+        
+        if (_measurementState == Measurement_Done2)
+        {
+            // from 3d point to screen point to [-1 1]
+            GLKVector2 onScreenPt4;
+            bool pt4OnScreen = [self point3dToScreenPoint:_pt4 screenPt:onScreenPt4];
+            
+            if (pt4OnScreen)
+                [self updateViewWith2DPosition:_circle4 onScreenPt:onScreenPt4];
+            else
+                _circle4.hidden = true;
+            
+            GLKVector2 onScreenCenter;
+            bool ptCenterOnScreen = [self point3dToScreenPoint:GLKVector3MultiplyScalar(GLKVector3Add(_pt3, _pt4), 0.5) screenPt:onScreenCenter];
+            
+            if (ptCenterOnScreen)
+                [self updateViewWith2DPosition:_ruler2Text onScreenPt:onScreenCenter];
+            else
+                _ruler2Text.hidden = true;
+        }
+    }
+    else if (_measurementState == Measurement_Point5 || _measurementState == Measurement_Done3)
+    {
+        GLKVector2 onScreenPt5;
+        bool pt5OnScreen = [self point3dToScreenPoint:_pt5 screenPt:onScreenPt5];
+        
+        if (pt5OnScreen)
+            [self updateViewWith2DPosition:_circle5 onScreenPt:onScreenPt5];
+        else
+            _circle5.hidden = true;
+        
+        if (_measurementState == Measurement_Done3)
+        {
+            // from 3d point to screen point to [-1 1]
+            GLKVector2 onScreenPt6;
+            bool pt6OnScreen = [self point3dToScreenPoint:_pt6 screenPt:onScreenPt6];
+            
+            if (pt6OnScreen)
+                [self updateViewWith2DPosition:_circle6 onScreenPt:onScreenPt6];
+            else
+                _circle6.hidden = true;
+            
+            GLKVector2 onScreenCenter;
+            bool ptCenterOnScreen = [self point3dToScreenPoint:GLKVector3MultiplyScalar(GLKVector3Add(_pt5, _pt6), 0.5) screenPt:onScreenCenter];
+            
+            if (ptCenterOnScreen)
+                [self updateViewWith2DPosition:_ruler3Text onScreenPt:onScreenCenter];
+            else
+                _ruler3Text.hidden = true;
         }
     }
     
     if (_measurementState == Measurement_Done1)
         _graphicsRenderer->renderLine(_pt1, _pt2, currentProjection, currentModelView, _circle1.frame.origin.x < _circle2.frame.origin.x);
+    else if (_measurementState == Measurement_Done2)
+        _graphicsRenderer->renderLine(_pt3, _pt4, currentProjection, currentModelView, _circle3.frame.origin.x < _circle4.frame.origin.x);
+    else if (_measurementState == Measurement_Done3)
+        _graphicsRenderer->renderLine(_pt5, _pt6, currentProjection, currentModelView, _circle5.frame.origin.x < _circle6.frame.origin.x);
     
     [(EAGLView *)self.view presentFramebuffer];
     
@@ -667,7 +751,7 @@ enum MeasurementState {
     
     if(_measurementState == Measurement_Clear)
         [self enterMeasurementState:Measurement_Point1];
-    else if(_measurementState == Measurement_Done1)
+    else if(_measurementState == Measurement_Done3)
         [self enterMeasurementState:Measurement_Clear];
 }
 
@@ -682,15 +766,23 @@ enum MeasurementState {
             [self.measurementButton setTitle:@"Measure" forState:UIControlStateNormal];
             
             [self hideMeshViewerMessage:self.measurementGuideLabel];
-            _rulerText.hidden = true;
+            _ruler1Text.hidden = true;
             _circle1.hidden = true;
             _circle2.hidden = true;
+            
+            _ruler2Text.hidden = true;
+            _circle3.hidden = true;
+            _circle4.hidden = true;
+            
+            _ruler3Text.hidden = true;
+            _circle5.hidden = true;
+            _circle6.hidden = true;
         }
             break;
         case Measurement_Point1:
         {
             self.measurementButton.enabled = false;
-            _rulerText.hidden = true;
+            _ruler1Text.hidden = true;
             _circle1.hidden = true;
             _circle2.hidden = true;
             [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place first point."];
@@ -698,7 +790,7 @@ enum MeasurementState {
             break;
         case Measurement_Point2:
         {
-            _rulerText.hidden = true;
+            _ruler1Text.hidden = true;
             _circle1.hidden = true;
             _circle2.hidden = true;
             [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place second point."];
@@ -706,16 +798,68 @@ enum MeasurementState {
             break;
         case Measurement_Done1:
         {
-            self.measurementButton.enabled = true;
-            [self.measurementButton setTitle:@"Clear" forState:UIControlStateNormal];
+           // self.measurementButton.enabled = true;
+           // [self.measurementButton setTitle:@"Clear" forState:UIControlStateNormal];
             
             float distance = GLKVector3Length(GLKVector3Subtract(_pt2, _pt1));
             if (distance > 1.0f)
-                _rulerText.text = [NSString stringWithFormat:@"%.2f m", distance];
+                _ruler1Text.text = [NSString stringWithFormat:@"%.2f m", distance];
             else
-                _rulerText.text = [NSString stringWithFormat:@"%.1f cm", distance*100];
+                _ruler1Text.text = [NSString stringWithFormat:@"%.1f cm", distance*100];
             _circle2.hidden = false;
+            _ruler1Text.hidden = false;
+            //[self hideMeshViewerMessage:self.measurementGuideLabel];
+            [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place Third point."];
+        }
+            break;
+        case Measurement_Point3:
+        {
+            _circle3.hidden = true;
+            _circle4.hidden = true;
+            [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place fourth point."];
+        }
+            break;
+        case Measurement_Done2:
+        {
+            // self.measurementButton.enabled = true;
+            // [self.measurementButton setTitle:@"Clear" forState:UIControlStateNormal];
+            
+            float distance = GLKVector3Length(GLKVector3Subtract(_pt4, _pt3));
+            if (distance > 1.0f)
+                _ruler2Text.text = [NSString stringWithFormat:@"%.2f m", distance];
+            else
+                _ruler2Text.text = [NSString stringWithFormat:@"%.1f cm", distance*100];
+            _circle4.hidden = false;
+             _ruler1Text.hidden = false;
+             _ruler2Text.hidden = false;
+            //[self hideMeshViewerMessage:self.measurementGuideLabel];
+            [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place Fifth point."];
+             //[self enterMeasurementState:Measurement_Clear];
+        }
+            break;
+        case Measurement_Point5:
+        {
+            _circle5.hidden = true;
+            _circle6.hidden = true;
+            [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place sixth point."];
+        }
+             break;
+        case Measurement_Done3:
+        {
+             self.measurementButton.enabled = true;
+             [self.measurementButton setTitle:@"Clear" forState:UIControlStateNormal];
+            
+            float distance = GLKVector3Length(GLKVector3Subtract(_pt6, _pt5));
+            if (distance > 1.0f)
+                _ruler3Text.text = [NSString stringWithFormat:@"%.2f m", distance];
+            else
+                _ruler3Text.text = [NSString stringWithFormat:@"%.1f cm", distance*100];
+            _circle6.hidden = false;
+             _ruler1Text.hidden = false;
+             _ruler2Text.hidden = false;
+             _ruler3Text.hidden = false;
             [self hideMeshViewerMessage:self.measurementGuideLabel];
+            //[self enterMeasurementState:Measurement_Clear];
         }
             break;
         default:
@@ -831,7 +975,7 @@ enum MeasurementState {
 // measurement control
 - (void)singleTapGesture:(UITapGestureRecognizer *)gestureRecognizer
 {
-    if (_measurementState != Measurement_Point1 && _measurementState != Measurement_Point2) {
+    if (_measurementState != Measurement_Point1 && _measurementState != Measurement_Point2 && _measurementState != Measurement_Point3 && _measurementState != Measurement_Point4 && _measurementState != Measurement_Point5 && _measurementState != Measurement_Point6 && _measurementState != Measurement_Done1 && _measurementState != Measurement_Done2 && _measurementState != Measurement_Done3) {
         return;
     }
     
@@ -871,6 +1015,26 @@ enum MeasurementState {
             {
                 _pt2 = intersection;
                 [self enterMeasurementState:Measurement_Done1];
+            }
+            else if(_measurementState == Measurement_Done1)
+            {
+                _pt3 = intersection;
+                [self enterMeasurementState:Measurement_Point3];
+            }
+            else if(_measurementState == Measurement_Point3)
+            {
+                _pt4 = intersection;
+                [self enterMeasurementState:Measurement_Done2];
+            }
+            else if(_measurementState == Measurement_Done2)
+            {
+                _pt5 = intersection;
+                [self enterMeasurementState:Measurement_Point5];
+            }
+            else if(_measurementState == Measurement_Point5)
+            {
+                _pt6 = intersection;
+                [self enterMeasurementState:Measurement_Done3];
             }
         }
     }
