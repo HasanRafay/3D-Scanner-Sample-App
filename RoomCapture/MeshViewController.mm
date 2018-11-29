@@ -12,6 +12,8 @@
 #import "CustomUIKitStyles.h"
 
 #import <ImageIO/ImageIO.h>
+#import <QuartzCore/QuartzCore.h>
+#import <Photos/Photos.h>
 
 #include <vector>
 
@@ -146,6 +148,12 @@ enum MeasurementState {
                                                                        target:self
                                                                        action:@selector(emailMesh)];
         self.navigationItem.rightBarButtonItem = emailButton;
+        
+        UIBarButtonItem *screenshotButton = [[UIBarButtonItem alloc] initWithTitle:@"Take Screenshot"
+                                                                        style:UIBarButtonItemStylePlain
+                                                                       target:self
+                                                                       action:@selector(takeScreenshot)];
+        self.navigationItem.rightBarButtonItem = screenshotButton;
         
         
         self.title = @"Structure Sensor Room Capture";
@@ -479,6 +487,41 @@ enum MeasurementState {
     glDeleteTextures(1, &outputTexture);
     glDeleteFramebuffers(1, &colorFrameBuffer);
     glDeleteRenderbuffers(1, &depthRenderBuffer);
+}
+
+- (void) takeScreenshot {
+    NSLog(@"Screenshot");
+    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
+        UIGraphicsBeginImageContextWithOptions(self.view.window.bounds.size, NO, [UIScreen mainScreen].scale);
+    } else {
+        UIGraphicsBeginImageContext(self.view.window.bounds.size);
+    }
+    
+    [self.view.window.layer renderInContext:UIGraphicsGetCurrentContext()];
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+//    NSData *imageData = UIImagePNGRepresentation(image);
+//    if (imageData) {
+//        [imageData writeToFile:@"screenshot.png" atomically:YES];
+//    } else {
+//        NSLog(@"error while taking screenshot");
+//    }
+    
+    //UIImage *snapshot = self.myImageView.image;
+    
+//    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
+//        PHAssetChangeRequest *changeRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
+//        changeRequest.creationDate          = [NSDate date];
+//    } completionHandler:^(BOOL success, NSError *error) {
+//        if (success) {
+//            NSLog(@"successfully saved");
+//        }
+//        else {
+//            NSLog(@"error saving to photos: %@", error);
+//        }
+//    }];
+
+    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
 }
 
 - (void)emailMesh
