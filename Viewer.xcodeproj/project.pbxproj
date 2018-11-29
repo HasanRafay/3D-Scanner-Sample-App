@@ -207,7 +207,8 @@
 				ORGANIZATIONNAME = Occipital;
 				TargetAttributes = {
 					6F7C0CBC17F0EA0500692EC1 = {
-						DevelopmentTeam = TP97HMW84Y;
+						DevelopmentTeam = 79YLMQ62DM;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -321,7 +322,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = TP97HMW84Y;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 79YLMQ62DM;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Viewer/Viewer-Prefix.pch";
 				INFOPLIST_FILE = "Viewer/Viewer-Info.plist";
@@ -330,8 +332,9 @@
 					"-framework",
 					ExternalAccessory,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.structure.sample.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nascenia.local;
 				PRODUCT_NAME = Viewer;
+				PROVISIONING_PROFILE_SPECIFIER = "Shippax stage";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -385,7 +388,8 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				DEVELOPMENT_TEAM = TP97HMW84Y;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 79YLMQ62DM;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Viewer/Viewer-Prefix.pch";
 				INFOPLIST_FILE = "Viewer/Viewer-Info.plist";
@@ -394,8 +398,9 @@
 					"-framework",
 					ExternalAccessory,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.structure.sample.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nascenia.local;
 				PRODUCT_NAME = Viewer;
+				PROVISIONING_PROFILE_SPECIFIER = "Shippax stage";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;

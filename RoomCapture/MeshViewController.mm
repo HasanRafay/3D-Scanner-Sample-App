@@ -77,7 +77,9 @@ enum MeasurementState {
 {
     CADisplayLink *_displayLink;
     MeshRenderer *_meshRenderer;
-    GraphicsRenderer *_graphicsRenderer;
+    GraphicsRenderer *_graphicsRenderer1;
+    GraphicsRenderer *_graphicsRenderer2;
+    GraphicsRenderer *_graphicsRenderer3;
     ViewpointController *_viewpointController;
     
     Joystick *_translationJoystick;
@@ -124,7 +126,9 @@ enum MeasurementState {
 {
     // Initialize C++ members.
     _meshRenderer = 0;
-    _graphicsRenderer = 0;
+    _graphicsRenderer1 = 0;
+    _graphicsRenderer2 = 0;
+    _graphicsRenderer3 = 0;
     _viewpointController = 0;
     
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -242,7 +246,9 @@ enum MeasurementState {
 -(void)dealloc
 {
     delete _meshRenderer; _meshRenderer = 0;
-    delete _graphicsRenderer; _graphicsRenderer = 0;
+    delete _graphicsRenderer1; _graphicsRenderer1 = 0;
+    delete _graphicsRenderer2; _graphicsRenderer2 = 0;
+    delete _graphicsRenderer3; _graphicsRenderer3 = 0;
     delete _viewpointController; _viewpointController = 0;
 }
 
@@ -256,7 +262,9 @@ enum MeasurementState {
     [self.meshViewerMessageLabel applyCustomStyleWithBackgroundColor:blackLabelColorWithLightAlpha];
     
     _meshRenderer = new MeshRenderer;
-    _graphicsRenderer = new GraphicsRenderer(@"measurementTape.png");
+    _graphicsRenderer1 = new GraphicsRenderer(@"measurementTape.png");
+    _graphicsRenderer2 = new GraphicsRenderer(@"measurementTape.png");
+    _graphicsRenderer3 = new GraphicsRenderer(@"measurementTape.png");
     _viewpointController = new ViewpointController(self.view.frame.size.width, self.view.frame.size.height);
     
     [self setupGL];
@@ -321,7 +329,9 @@ enum MeasurementState {
 - (void)setupGL
 {
     _meshRenderer->initializeGL();
-    _graphicsRenderer->initializeGL();
+    _graphicsRenderer1->initializeGL();
+    _graphicsRenderer2->initializeGL();
+    _graphicsRenderer3->initializeGL();
     
     NSAssert (glGetError() == 0, @"Unexpected GL error, could not initialize the MeshRenderer");
 }
@@ -709,11 +719,11 @@ enum MeasurementState {
     }
     
     if (_measurementState == Measurement_Done1)
-        _graphicsRenderer->renderLine(_pt1, _pt2, currentProjection, currentModelView, _circle1.frame.origin.x < _circle2.frame.origin.x);
+        _graphicsRenderer1->renderLine(_pt1, _pt2, currentProjection, currentModelView, _circle1.frame.origin.x < _circle2.frame.origin.x);
     else if (_measurementState == Measurement_Done2)
-        _graphicsRenderer->renderLine(_pt3, _pt4, currentProjection, currentModelView, _circle3.frame.origin.x < _circle4.frame.origin.x);
+        _graphicsRenderer2->renderLine(_pt3, _pt4, currentProjection, currentModelView, _circle3.frame.origin.x < _circle4.frame.origin.x);
     else if (_measurementState == Measurement_Done3)
-        _graphicsRenderer->renderLine(_pt5, _pt6, currentProjection, currentModelView, _circle5.frame.origin.x < _circle6.frame.origin.x);
+        _graphicsRenderer3->renderLine(_pt5, _pt6, currentProjection, currentModelView, _circle5.frame.origin.x < _circle6.frame.origin.x);
     
     [(EAGLView *)self.view presentFramebuffer];
     

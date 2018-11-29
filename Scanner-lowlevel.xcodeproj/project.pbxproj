@@ -289,7 +289,8 @@
 				ORGANIZATIONNAME = Occipital;
 				TargetAttributes = {
 					2AFC8D73176F966000F7F3B5 = {
-						DevelopmentTeam = TP97HMW84Y;
+						DevelopmentTeam = 79YLMQ62DM;
+						ProvisioningStyle = Manual;
 					};
 				};
 			};
@@ -440,7 +441,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = TP97HMW84Y;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 79YLMQ62DM;
 				FRAMEWORK_SEARCH_PATHS = ../Frameworks;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Scanner-lowlevel/Scanner-Prefix.pch";
@@ -449,8 +451,9 @@
 					"-framework",
 					ExternalAccessory,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.structure.sample.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nascenia.local;
 				PRODUCT_NAME = Scanner;
+				PROVISIONING_PROFILE_SPECIFIER = "Shippax stage";
 				VALID_ARCHS = arm64;
 			};
 			name = Release;
@@ -510,7 +513,8 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
-				DEVELOPMENT_TEAM = TP97HMW84Y;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = 79YLMQ62DM;
 				FRAMEWORK_SEARCH_PATHS = ../Frameworks;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Scanner-lowlevel/Scanner-Prefix.pch";
@@ -519,9 +523,10 @@
 					"-framework",
 					ExternalAccessory,
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = "io.structure.sample.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.nascenia.local;
 				PRODUCT_NAME = Scanner;
 				PROVISIONING_PROFILE = "";
+				PROVISIONING_PROFILE_SPECIFIER = "Shippax stage";
 				VALID_ARCHS = arm64;
 			};
 			name = Debug;
