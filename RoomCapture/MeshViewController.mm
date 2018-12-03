@@ -10,7 +10,7 @@
 #import "ViewpointController.h"
 #import "Joystick.h"
 #import "CustomUIKitStyles.h"
-
+#import "TTOpenInAppActivity.h"
 #import <ImageIO/ImageIO.h>
 #import <QuartzCore/QuartzCore.h>
 #import <Photos/Photos.h>
@@ -126,6 +126,8 @@ enum MeasurementState {
 - (id)initWithNibName:(NSString *)nibNameOrNil
                bundle:(NSBundle *)nibBundleOrNil
 {
+    
+    self.employeeInfoArray  = [[NSMutableArray alloc]initWithCapacity:0];
     // Initialize C++ members.
     _meshRenderer = 0;
     _graphicsRenderer1 = 0;
@@ -149,12 +151,11 @@ enum MeasurementState {
                                                                        action:@selector(emailMesh)];
         self.navigationItem.rightBarButtonItem = emailButton;
         
-        UIBarButtonItem *screenshotButton = [[UIBarButtonItem alloc] initWithTitle:@"Take Screenshot"
+        UIBarButtonItem *screenshotButton = [[UIBarButtonItem alloc] initWithTitle:@"Send Measurement"
                                                                         style:UIBarButtonItemStylePlain
                                                                        target:self
-                                                                       action:@selector(takeScreenshot)];
+                                                                            action:@selector(createCSV:)];
         self.navigationItem.rightBarButtonItem = screenshotButton;
-        
         
         self.title = @"Structure Sensor Room Capture";
         
@@ -187,7 +188,6 @@ enum MeasurementState {
         [self.view addSubview:_ruler1Text];
         [self.view sendSubviewToBack:_ruler1Text];
         
-        // Rafay added start
         _ruler2Text = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, 100, 40)];
         [_ruler2Text applyCustomStyleWithBackgroundColor:blackLabelColorWithAlpha];
         
@@ -201,45 +201,42 @@ enum MeasurementState {
         _ruler3Text.textAlignment = NSTextAlignmentCenter;
         [self.view addSubview:_ruler3Text];
         [self.view sendSubviewToBack:_ruler3Text];
-        // Rafay added close
         
         _circle1 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"innerCircle.png"]];
         _circle2 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"innerCircle.png"]];
         
-        //Rafay added start
         _circle3 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"innerCircle.png"]];
         _circle4 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"innerCircle.png"]];
         _circle5 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"innerCircle.png"]];
         _circle6 = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"innerCircle.png"]];
-        //Rafay added close
         
         CGRect frame = _circle1.frame;
         frame.size = CGSizeMake(50, 50);
         _circle1.frame = frame;
         _circle2.frame = frame;
-        //Rafay added start
+        
         _circle3.frame = frame;
         _circle4.frame = frame;
         _circle5.frame = frame;
         _circle6.frame = frame;
-        // Rafay added close
+        
         
         [self.view addSubview:_circle1];
         [self.view addSubview:_circle2];
-        //rafay added start
+        
         [self.view addSubview:_circle3];
         [self.view addSubview:_circle4];
         [self.view addSubview:_circle5];
         [self.view addSubview:_circle6];
-        //rafay added close
+        
         [self.view sendSubviewToBack:_circle1];
         [self.view sendSubviewToBack:_circle2];
-        //rafay added start
+        
         [self.view sendSubviewToBack:_circle3];
         [self.view sendSubviewToBack:_circle4];
         [self.view sendSubviewToBack:_circle5];
         [self.view sendSubviewToBack:_circle6];
-        // rafay added close
+       
         
     }
     
@@ -489,40 +486,122 @@ enum MeasurementState {
     glDeleteRenderbuffers(1, &depthRenderBuffer);
 }
 
+-(void)createCSV:(UIBarButtonItem *)sender
+{
+    
+    NSMutableString *csvString = [[NSMutableString alloc]initWithCapacity:0];
+    [csvString appendString:@"NAME, MEASUREMENT\n"];
+
+    for (NSDictionary *dct in self.employeeInfoArray)
+    {
+        [csvString appendString:[NSString stringWithFormat:@"%@, %@\n",[dct valueForKey:@"ID"],[dct valueForKey:@"VALUE"]]];
+    }
+
+
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    NSString *documentsDirectory = [paths objectAtIndex:0];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, @"Measurement.csv"];
+    [csvString writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+    
+    NSURL *URL = [NSURL fileURLWithPath:filePath];
+    TTOpenInAppActivity *openInAppActivity = [[TTOpenInAppActivity alloc] initWithView:self.view andBarButtonItem:sender];
+    UIActivityViewController *activityViewController = [[UIActivityViewController alloc] initWithActivityItems:@[URL] applicationActivities:@[openInAppActivity]];
+    
+    activityViewController.popoverPresentationController.barButtonItem = sender;
+    //activityViewController.popoverPresentationController.sourceView = self.view;
+    //activityViewController.popoverPresentationController.sourceRect = self.navigationController.navigationItem.rightBarButtonItem.accessibilityFrame;
+    
+    [self presentViewController:activityViewController animated:YES completion:NULL];
+    
+}
+
+
 - (void) takeScreenshot {
-    NSLog(@"Screenshot");
-    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
-        UIGraphicsBeginImageContextWithOptions(self.view.window.bounds.size, NO, [UIScreen mainScreen].scale);
-    } else {
-        UIGraphicsBeginImageContext(self.view.window.bounds.size);
+    
+    GLint backingWidth2, backingHeight2;
+    //Bind the color renderbuffer used to render the OpenGL ES view
+    // If your application only creates a single color renderbuffer which is already bound at this point,
+    // this call is redundant, but it is needed if you're dealing with multiple renderbuffers.
+    // Note, replace "_colorRenderbuffer" with the actual name of the renderbuffer object defined in your class.
+   // glBindRenderbufferOES(GL_RENDERBUFFER_OES, viewRenderbuffer);
+   // [(EAGLView *)self.view setFramebuffer];
+    
+    // Get the size of the backing CAEAGLLayer
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_WIDTH_OES, &backingWidth2);
+    glGetRenderbufferParameterivOES(GL_RENDERBUFFER_OES, GL_RENDERBUFFER_HEIGHT_OES, &backingHeight2);
+    
+    NSInteger x = 0, y = 0, width2 = backingWidth2, height2 = backingHeight2;
+    NSInteger dataLength = width2 * height2 * 4;
+    GLubyte *data = (GLubyte*)malloc(dataLength * sizeof(GLubyte));
+    
+    // Read pixel data from the framebuffer
+    glPixelStorei(GL_PACK_ALIGNMENT, 4);
+    glReadPixels(x, y, width2, height2, GL_RGBA, GL_UNSIGNED_BYTE, data);
+    
+    // Create a CGImage with the pixel data
+    // If your OpenGL ES content is opaque, use kCGImageAlphaNoneSkipLast to ignore the alpha channel
+    // otherwise, use kCGImageAlphaPremultipliedLast
+    CGDataProviderRef ref = CGDataProviderCreateWithData(NULL, data, dataLength, NULL);
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGImageRef iref = CGImageCreate(width2, height2, 8, 32, width2 * 4, colorspace, kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast,
+                                    ref, NULL, true, kCGRenderingIntentDefault);
+    
+    // OpenGL ES measures data in PIXELS
+    // Create a graphics context with the target size measured in POINTS
+    NSInteger widthInPoints, heightInPoints;
+    if (NULL != UIGraphicsBeginImageContextWithOptions) {
+        // On iOS 4 and later, use UIGraphicsBeginImageContextWithOptions to take the scale into consideration
+        // Set the scale parameter to your OpenGL ES view's contentScaleFactor
+        // so that you get a high-resolution snapshot when its value is greater than 1.0
+        CGFloat scale = self.view.contentScaleFactor;
+        widthInPoints = width2 / scale;
+        heightInPoints = height2 / scale;
+        UIGraphicsBeginImageContextWithOptions(CGSizeMake(widthInPoints, heightInPoints), NO, scale);
+    }
+    else {
+        // On iOS prior to 4, fall back to use UIGraphicsBeginImageContext
+        widthInPoints = width2;
+        heightInPoints = height2;
+        UIGraphicsBeginImageContext(CGSizeMake(widthInPoints, heightInPoints));
     }
     
-    [self.view.window.layer renderInContext:UIGraphicsGetCurrentContext()];
+    CGContextRef cgcontext = UIGraphicsGetCurrentContext();
+    
+    // UIKit coordinate system is upside down to GL/Quartz coordinate system
+    // Flip the CGImage by rendering it to the flipped bitmap context
+    // The size of the destination area is measured in POINTS
+    CGContextSetBlendMode(cgcontext, kCGBlendModeCopy);
+    CGContextDrawImage(cgcontext, CGRectMake(0.0, 0.0, widthInPoints, heightInPoints), iref);
+    
+    // Retrieve the UIImage from the current context
     UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+    
     UIGraphicsEndImageContext();
-//    NSData *imageData = UIImagePNGRepresentation(image);
-//    if (imageData) {
-//        [imageData writeToFile:@"screenshot.png" atomically:YES];
-//    } else {
-//        NSLog(@"error while taking screenshot");
-//    }
-    
-    //UIImage *snapshot = self.myImageView.image;
-    
-//    [[PHPhotoLibrary sharedPhotoLibrary] performChanges:^{
-//        PHAssetChangeRequest *changeRequest = [PHAssetChangeRequest creationRequestForAssetFromImage:image];
-//        changeRequest.creationDate          = [NSDate date];
-//    } completionHandler:^(BOOL success, NSError *error) {
-//        if (success) {
-//            NSLog(@"successfully saved");
-//        }
-//        else {
-//            NSLog(@"error saving to photos: %@", error);
-//        }
-//    }];
-
     UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+    /*
+    UIImageView *tempImageView = [[UIImageView alloc] initWithImage:image];
+    UIGraphicsBeginImageContext(tempImageView.frame.size);
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGAffineTransform flipVertical = CGAffineTransformMake(
+                                                           1, 0, 0, -1, 0, tempImageView.frame.size.height
+                                                           );
+    CGContextConcatCTM(context, flipVertical);
+    
+    [tempImageView.layer renderInContext:context];
+    
+    UIImage *flippedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+    UIImageWriteToSavedPhotosAlbum(flippedImage, nil, nil, nil);
+     */
+    
+    // Clean up
+    free(data);
+    CFRelease(ref);
+    CFRelease(colorspace);
+    CGImageRelease(iref);
+    
 }
+
 
 - (void)emailMesh
 {
@@ -815,6 +894,7 @@ enum MeasurementState {
     {
         case Measurement_Clear:
         {
+            //[self.employeeInfoArray removeAllObjects];
             self.measurementButton.enabled = true;
             [self.measurementButton setTitle:@"Measure" forState:UIControlStateNormal];
             
@@ -851,8 +931,6 @@ enum MeasurementState {
             break;
         case Measurement_Done1:
         {
-           // self.measurementButton.enabled = true;
-           // [self.measurementButton setTitle:@"Clear" forState:UIControlStateNormal];
             
             float distance = GLKVector3Length(GLKVector3Subtract(_pt2, _pt1));
             if (distance > 1.0f)
@@ -861,8 +939,7 @@ enum MeasurementState {
                 _ruler1Text.text = [NSString stringWithFormat:@"%.1f cm", distance*100];
             _circle2.hidden = false;
             _ruler1Text.hidden = false;
-            //[self hideMeshViewerMessage:self.measurementGuideLabel];
-            [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place Third point."];
+            [self getMeasuredObjectNameForValue:_ruler1Text.text whenFinishedMeasurementNo:1];
         }
             break;
         case Measurement_Point3:
@@ -874,9 +951,6 @@ enum MeasurementState {
             break;
         case Measurement_Done2:
         {
-            // self.measurementButton.enabled = true;
-            // [self.measurementButton setTitle:@"Clear" forState:UIControlStateNormal];
-            
             float distance = GLKVector3Length(GLKVector3Subtract(_pt4, _pt3));
             if (distance > 1.0f)
                 _ruler2Text.text = [NSString stringWithFormat:@"%.2f m", distance];
@@ -885,9 +959,7 @@ enum MeasurementState {
             _circle4.hidden = false;
              _ruler1Text.hidden = false;
              _ruler2Text.hidden = false;
-            //[self hideMeshViewerMessage:self.measurementGuideLabel];
-            [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place Fifth point."];
-             //[self enterMeasurementState:Measurement_Clear];
+            [self getMeasuredObjectNameForValue:_ruler2Text.text whenFinishedMeasurementNo:2];
         }
             break;
         case Measurement_Point5:
@@ -911,8 +983,7 @@ enum MeasurementState {
              _ruler1Text.hidden = false;
              _ruler2Text.hidden = false;
              _ruler3Text.hidden = false;
-            [self hideMeshViewerMessage:self.measurementGuideLabel];
-            //[self enterMeasurementState:Measurement_Clear];
+            [self getMeasuredObjectNameForValue:_ruler3Text.text whenFinishedMeasurementNo:3];
         }
             break;
         default:
@@ -921,6 +992,45 @@ enum MeasurementState {
     
     // Make sure we refresh the ruler.
     self.needsDisplay = true;
+}
+
+- (void) getMeasuredObjectNameForValue:(NSString *) value whenFinishedMeasurementNo:(NSInteger) doneButtonNumber {
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
+                                                                   message:@"Enter object name"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Save" style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * action) {
+                                                       
+                                                       if (alert.textFields.count > 0) {
+                                                           
+                                                           UITextField *textField = [alert.textFields firstObject];
+                                                           
+                                                           NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithCapacity:0];
+                                                           [dict setValue:textField.text forKey:@"ID"];
+                                                           [dict setValue: value forKey:@"VALUE"];
+                                                           [self.employeeInfoArray addObject:dict];
+                                                           
+                                                           if (doneButtonNumber == 1){
+                                                               [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place Third point."];
+                                                           }
+                                                           else if (doneButtonNumber == 2){
+                                                               [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place Fifth point."];
+                                                           }
+                                                           else if (doneButtonNumber == 3) {
+                                                               [self hideMeshViewerMessage:self.measurementGuideLabel];
+                                                           }
+                                                       }
+                                                       
+                                                   }];
+    
+    [alert addAction:submit];
+    
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"Object name"; // if needs
+    }];
+    
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (IBAction)topViewSwitchChanged:(id)sender

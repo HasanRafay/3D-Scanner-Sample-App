@@ -22,6 +22,7 @@
 @property (nonatomic, assign) id<MeshViewDelegate> delegate;
 
 @property (nonatomic) BOOL needsDisplay; // force the view to redraw.
+@property (strong,nonatomic) NSMutableArray *employeeInfoArray;
 
 @property (weak, nonatomic) IBOutlet UILabel *meshViewerMessageLabel;
 @property (weak, nonatomic) IBOutlet UILabel *measurementGuideLabel;
@@ -45,5 +46,6 @@
 
 - (void)setHorizontalFieldOfView:(float)fovXRadians aspectRatio:(float)aspectRatio;
 - (void)setCameraPose:(GLKMatrix4)pose;
+- (void)getMeasuredObjectNameForValue:(NSString *) value whenFinishedMeasurementNo:(NSInteger) doneButtonNumber;
 
 @end
