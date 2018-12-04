@@ -9,6 +9,8 @@
 #import <MessageUI/MFMailComposeViewController.h>
 #import <Structure/StructureSLAM.h>
 #import "EAGLView.h"
+#import <CoreLocation/CoreLocation.h>
+#import <AddressBook/AddressBook.h>
 
 @protocol MeshViewDelegate <NSObject>
 - (void)meshViewWillDismiss;
@@ -17,13 +19,15 @@
 - (void)meshViewDidRequestHoleFilling;
 @end
 
-@interface MeshViewController : UIViewController <UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate>
+@interface MeshViewController : UIViewController <UIGestureRecognizerDelegate, MFMailComposeViewControllerDelegate, CLLocationManagerDelegate>
 
 @property (nonatomic, assign) id<MeshViewDelegate> delegate;
 
 @property (nonatomic) BOOL needsDisplay; // force the view to redraw.
 @property (strong,nonatomic) NSMutableArray *employeeInfoArray;
-
+@property (strong, nonatomic) CLLocationManager *locationManager;
+@property (strong, nonatomic) CLGeocoder *geocoder;
+@property (strong, nonatomic) NSString *location, *latitude, *longlitude;
 @property (weak, nonatomic) IBOutlet UILabel *meshViewerMessageLabel;
 @property (weak, nonatomic) IBOutlet UILabel *measurementGuideLabel;
 

@@ -14,7 +14,6 @@
 #import <ImageIO/ImageIO.h>
 #import <QuartzCore/QuartzCore.h>
 #import <Photos/Photos.h>
-
 #include <vector>
 
 // Local Helper Functions
@@ -274,6 +273,20 @@ enum MeasurementState {
     
     [self setupGL];
     [self setupGestureRecognizer];
+    
+    self.location = [NSString new];
+    self.latitude = [NSString new];
+    self.longlitude = [NSString new];
+    self.geocoder = [[CLGeocoder alloc] init];
+    self.locationManager = [[CLLocationManager alloc] init];
+    self.locationManager.delegate = self;
+    self.locationManager.distanceFilter = kCLDistanceFilterNone;
+    self.locationManager.desiredAccuracy = kCLLocationAccuracyBest;
+    
+    if ([[[UIDevice currentDevice] systemVersion] floatValue] >= 8.0)
+        [self.locationManager requestWhenInUseAuthorization];
+    
+    [self.locationManager startUpdatingLocation];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -307,6 +320,35 @@ enum MeasurementState {
 {
     [super didReceiveMemoryWarning];
 }
+
+
+- (void)locationManager:(CLLocationManager *)manager didUpdateLocations:(NSArray *)locations {
+    
+    CLLocation *location = [locations lastObject];
+    self.latitude = [NSString stringWithFormat:@"%f", location.coordinate.latitude];
+    self.longlitude = [NSString stringWithFormat:@"%f", location.coordinate.longitude];
+    
+    [self.geocoder reverseGeocodeLocation:location completionHandler:^(NSArray *placemarks, NSError *error) {
+        CLPlacemark *placemark = [placemarks lastObject];
+        
+        self.location = @"";
+        if (placemark.name != NULL)
+            self.location = placemark.name;
+        if (placemark.thoroughfare != NULL)
+            self.location = [NSString stringWithFormat:@"%@ %@",self.location,placemark.thoroughfare];
+        if (placemark.subThoroughfare != NULL)
+            self.location = [NSString stringWithFormat:@"%@ %@",self.location,placemark.subThoroughfare];
+        if (placemark.locality != NULL)
+            self.location = [NSString stringWithFormat:@"%@ %@",self.location,placemark.locality];
+        if (placemark.country != NULL)
+            self.location = [NSString stringWithFormat:@"%@ %@",self.location,placemark.country];
+    
+        // stopping locationManager from fetching again
+        //[locationManager stopUpdatingLocation];
+    }];
+    
+}
+
 
 - (void)setupGestureRecognizer
 {
@@ -490,11 +532,11 @@ enum MeasurementState {
 {
     
     NSMutableString *csvString = [[NSMutableString alloc]initWithCapacity:0];
-    [csvString appendString:@"NAME, MEASUREMENT\n"];
+    [csvString appendString:@"Name, Measurement, Location, Time, Latitude, Longitude   \n"];
 
     for (NSDictionary *dct in self.employeeInfoArray)
     {
-        [csvString appendString:[NSString stringWithFormat:@"%@, %@\n",[dct valueForKey:@"ID"],[dct valueForKey:@"VALUE"]]];
+        [csvString appendString:[NSString stringWithFormat:@"%@, %@, %@, %@, %@, %@\n",[dct valueForKey:@"ID"],[dct valueForKey:@"VALUE"],[dct valueForKey:@"LOCATION"],[dct valueForKey:@"TIME"],[dct valueForKey:@"LATITUDE"],[dct valueForKey:@"LONGITUDE"]]];
     }
 
 
@@ -1005,10 +1047,16 @@ enum MeasurementState {
                                                        if (alert.textFields.count > 0) {
                                                            
                                                            UITextField *textField = [alert.textFields firstObject];
+                                                           NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+                                                           [dateFormatter setDateFormat:@"MMM d - h:mm a"];
                                                            
                                                            NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithCapacity:0];
                                                            [dict setValue:textField.text forKey:@"ID"];
                                                            [dict setValue: value forKey:@"VALUE"];
+                                                           [dict setValue: self.location forKey:@"LOCATION"];
+                                                           [dict setValue:[dateFormatter stringFromDate:[NSDate date]] forKey:@"TIME"];
+                                                           [dict setValue: self.latitude forKey:@"LATITUDE"];
+                                                           [dict setValue: self.longlitude forKey:@"LONGITUDE"];
                                                            [self.employeeInfoArray addObject:dict];
                                                            
                                                            if (doneButtonNumber == 1){

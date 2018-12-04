@@ -59,6 +59,8 @@
 		77AAADA31CA5AFA400D91B6C /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 77AAADA21CA5AFA400D91B6C /* Metal.framework */; };
 		7E2288C9198FE3D300F6E3B2 /* CustomUIKitStyles.mm in Sources */ = {isa = PBXBuildFile; fileRef = 7E2288C8198FE3D300F6E3B2 /* CustomUIKitStyles.mm */; };
 		7EAD268F198AACD500638C9C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EAD268E198AACD500638C9C /* libz.dylib */; };
+		84BD5ED721B6564B00D627E2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84BD5ED621B6564B00D627E2 /* CoreLocation.framework */; };
+		84BD5ED921B6817600D627E2 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84BD5ED821B6817500D627E2 /* AddressBook.framework */; };
 		84D05A9121B52BEC00CCA744 /* TTOpenInAppActivity.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84D05A8F21B52BEC00CCA744 /* TTOpenInAppActivity.bundle */; };
 		84D05A9221B52BEC00CCA744 /* TTOpenInAppActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D05A9021B52BEC00CCA744 /* TTOpenInAppActivity.m */; };
 		84D05A9421B52C1B00CCA744 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D05A9321B52C1A00CCA744 /* MobileCoreServices.framework */; };
@@ -133,6 +135,8 @@
 		7E2288C8198FE3D300F6E3B2 /* CustomUIKitStyles.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; name = CustomUIKitStyles.mm; path = RoomCapture/CustomUIKitStyles.mm; sourceTree = "<group>"; };
 		7EAD268E198AACD500638C9C /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = usr/lib/libz.dylib; sourceTree = SDKROOT; };
 		7EAD26A9198B015000638C9C /* CustomUIKitStyles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomUIKitStyles.h; path = RoomCapture/CustomUIKitStyles.h; sourceTree = "<group>"; };
+		84BD5ED621B6564B00D627E2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
+		84BD5ED821B6817500D627E2 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
 		84D05A8E21B52BEC00CCA744 /* TTOpenInAppActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOpenInAppActivity.h; sourceTree = "<group>"; };
 		84D05A8F21B52BEC00CCA744 /* TTOpenInAppActivity.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTOpenInAppActivity.bundle; sourceTree = "<group>"; };
 		84D05A9021B52BEC00CCA744 /* TTOpenInAppActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOpenInAppActivity.m; sourceTree = "<group>"; };
@@ -145,6 +149,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				84BD5ED921B6817600D627E2 /* AddressBook.framework in Frameworks */,
+				84BD5ED721B6564B00D627E2 /* CoreLocation.framework in Frameworks */,
 				84D05A9421B52C1B00CCA744 /* MobileCoreServices.framework in Frameworks */,
 				2DC7D69718438E1D005BEE8B /* ImageIO.framework in Frameworks */,
 				3F5DC76F211E2DBD00FEA377 /* MetalPerformanceShaders.framework in Frameworks */,
@@ -213,6 +219,8 @@
 		2AFC8D76176F966000F7F3B5 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				84BD5ED821B6817500D627E2 /* AddressBook.framework */,
+				84BD5ED621B6564B00D627E2 /* CoreLocation.framework */,
 				84D05A9321B52C1A00CCA744 /* MobileCoreServices.framework */,
 				3F5DC76E211E2DBD00FEA377 /* MetalPerformanceShaders.framework */,
 				3F5DC746211E2CA000FEA377 /* VideoToolbox.framework */,
