@@ -21,21 +21,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.8</string>
+	<string>1.0</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.8</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Enable photo library access to select a photo from your library.</string>
-	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>Enable photo library access to save images to your photo library directly from the app.</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>3D Scanner would like to access your location.</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>3D Scanner would like to access your location.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>3D Scanner would like to access your location.</string>
+	<string>1</string>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>structure-sensor-calibrator</string>
@@ -44,6 +34,16 @@
 	<true/>
 	<key>NSCameraUsageDescription</key>
 	<string>Camera image used for motion tracking and model texturing</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>3D Scanner would like to access your location.</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>3D Scanner would like to access your location.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>3D Scanner would like to access your location.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Enable photo library access to save images to your photo library directly from the app.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Enable photo library access to select a photo from your library.</string>
 	<key>UILaunchImages~ipad</key>
 	<array>
 		<dict>
@@ -77,6 +77,8 @@
 			<string>{768, 1024}</string>
 		</dict>
 	</array>
+	<key>UILaunchStoryboardName</key>
+	<string>Main</string>
 	<key>UIPrerenderedIcon</key>
 	<true/>
 	<key>UIRequiredDeviceCapabilities</key>

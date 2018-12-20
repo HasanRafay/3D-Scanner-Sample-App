@@ -243,6 +243,13 @@
 
 - (void)enterViewingState
 {
+    // Editing starts
+//    NSUserDefaults *currentDefaults = [NSUserDefaults standardUserDefaults];
+//    NSData *data = [NSKeyedArchiver archivedDataWithRootObject:_colorizedMesh];
+//    [currentDefaults setObject:data forKey:@"DATA"];
+//    [currentDefaults synchronize];
+    // editing ends
+    
     // Place the camera in the center of the scanning volume.
     GLKVector3 cameraCenter = GLKVector3MultiplyScalar(_slamState.cameraPoseInitializer.volumeSizeInMeters, 0.5);
     GLKMatrix4 initialCameraPose = GLKMatrix4MakeTranslation(cameraCenter.x, cameraCenter.y, cameraCenter.z);

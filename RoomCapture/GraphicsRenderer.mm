@@ -6,7 +6,7 @@
 
 #import <GLKit/GLKit.h>
 #import <OpenGLES/ES2/glext.h> // GL_RED_EXT
-
+#include <iostream>
 #import "GraphicsRenderer.h"
 #import "CustomShaders.h"
 
@@ -14,7 +14,7 @@
 #import <ImageIO/ImageIO.h>
 
 #define MAX_MESHES 30
-
+using namespace std;
 // Local functions
 
 void loadImageIntoTexture(NSString* nsName, NSString* type, GLuint *textureId)

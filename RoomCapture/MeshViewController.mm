@@ -277,6 +277,7 @@ enum MeasurementState {
     self.location = [NSString new];
     self.latitude = [NSString new];
     self.longlitude = [NSString new];
+    self.googleDriveFileName = [NSString new];
     self.geocoder = [[CLGeocoder alloc] init];
     self.locationManager = [[CLLocationManager alloc] init];
     self.locationManager.delegate = self;
@@ -287,6 +288,7 @@ enum MeasurementState {
         [self.locationManager requestWhenInUseAuthorization];
     
     [self.locationManager startUpdatingLocation];
+    self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -314,6 +316,33 @@ enum MeasurementState {
     [self enterMeasurementState:Measurement_Clear];
     
     _meshRenderer->setRenderingMode(MeshRenderer::RenderingModeTextured);
+}
+
+- (void) viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
+                                                                   message:@"Enter file name"
+                                                            preferredStyle:UIAlertControllerStyleAlert];
+    
+    UIAlertAction *submit = [UIAlertAction actionWithTitle:@"Create" style:UIAlertActionStyleDefault
+                                                   handler:^(UIAlertAction * action) {
+                                                       
+                                                       if (alert.textFields.count > 0) {
+                                                           UITextField *textField = [alert.textFields firstObject];
+                                                           self.googleDriveFileName = textField.text;
+                                                       }
+                                                       
+                                                   }];
+    
+    [alert addAction:submit];
+    
+    [alert addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"File name"; // if needs
+    }];
+    
+    [self presentViewController:alert animated:YES completion:nil];
 }
 
 - (void)didReceiveMemoryWarning
@@ -530,9 +559,31 @@ enum MeasurementState {
 
 -(void)createCSV:(UIBarButtonItem *)sender
 {
+//    if ([[UIScreen mainScreen] respondsToSelector:@selector(scale)]) {
+//        UIGraphicsBeginImageContextWithOptions(self.window.bounds.size, NO, [UIScreen mainScreen].scale);
+//    }
+//    else
+//    {
+//        UIGraphicsBeginImageContext(self.window.bounds.size);
+//
+//    }
+//    [self.window.layer renderInContext:UIGraphicsGetCurrentContext()];
+//    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+//    UIGraphicsEndImageContext();
+//    UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil);
+//    NSData *imageData = UIImagePNGRepresentation(image);
+//    if (imageData) {
+//        [imageData writeToFile:@"screenshot.png" atomically:YES];
+//    }
+//    else
+//    {
+//        NSLog(@"error while taking screenshot");
+//
+//    }
+//
     
     NSMutableString *csvString = [[NSMutableString alloc]initWithCapacity:0];
-    [csvString appendString:@"Name, Measurement, Location, Time, Latitude, Longitude   \n"];
+    [csvString appendString:@"名, 測定, ロケーション, 時間, 緯度, 経度   \n"];
 
     for (NSDictionary *dct in self.employeeInfoArray)
     {
@@ -540,9 +591,21 @@ enum MeasurementState {
     }
 
 
+    NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
+    [dateFormatter setDateFormat:@"MMM d YYYY h:mm a"];
+    NSString *fileName = [NSString new];
+    if (self.googleDriveFileName.length > 0)
+    {
+        fileName = [NSString stringWithFormat:@"%@.csv",self.googleDriveFileName];
+    }
+    else
+    {
+        fileName = [NSString stringWithFormat:@"Measurement_%@.csv",[dateFormatter stringFromDate:[NSDate date]]];
+    }
+    
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsDirectory = [paths objectAtIndex:0];
-    NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, @"Measurement.csv"];
+    NSString *filePath = [NSString stringWithFormat:@"%@/%@", documentsDirectory, fileName];
     [csvString writeToFile:filePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
     
     NSURL *URL = [NSURL fileURLWithPath:filePath];
@@ -554,6 +617,7 @@ enum MeasurementState {
     //activityViewController.popoverPresentationController.sourceRect = self.navigationController.navigationItem.rightBarButtonItem.accessibilityFrame;
     
     [self presentViewController:activityViewController animated:YES completion:NULL];
+    
     
 }
 
@@ -925,7 +989,7 @@ enum MeasurementState {
     
     if(_measurementState == Measurement_Clear)
         [self enterMeasurementState:Measurement_Point1];
-    else if(_measurementState == Measurement_Done3)
+    else if(_measurementState == Measurement_Done1 )
         [self enterMeasurementState:Measurement_Clear];
 }
 
@@ -973,7 +1037,8 @@ enum MeasurementState {
             break;
         case Measurement_Done1:
         {
-            
+            self.measurementButton.enabled = true;
+            [self.measurementButton setTitle:@"Clear" forState:UIControlStateNormal];
             float distance = GLKVector3Length(GLKVector3Subtract(_pt2, _pt1));
             if (distance > 1.0f)
                 _ruler1Text.text = [NSString stringWithFormat:@"%.2f m", distance];
@@ -1048,7 +1113,7 @@ enum MeasurementState {
                                                            
                                                            UITextField *textField = [alert.textFields firstObject];
                                                            NSDateFormatter *dateFormatter = [[NSDateFormatter alloc] init];
-                                                           [dateFormatter setDateFormat:@"MMM d - h:mm a"];
+                                                           [dateFormatter setDateFormat:@"MMM d YYYY h:mm a"];
                                                            
                                                            NSMutableDictionary *dict = [[NSMutableDictionary alloc]initWithCapacity:0];
                                                            [dict setValue:textField.text forKey:@"ID"];
@@ -1060,7 +1125,8 @@ enum MeasurementState {
                                                            [self.employeeInfoArray addObject:dict];
                                                            
                                                            if (doneButtonNumber == 1){
-                                                               [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place Third point."];
+                                                               //[self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place Third point."];
+                                                               [self hideMeshViewerMessage:self.measurementGuideLabel];
                                                            }
                                                            else if (doneButtonNumber == 2){
                                                                [self showMeshViewerMessage:self.measurementGuideLabel msg:@"Tap to place Fifth point."];

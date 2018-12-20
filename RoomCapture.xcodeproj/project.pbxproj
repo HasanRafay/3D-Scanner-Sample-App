@@ -61,6 +61,10 @@
 		7EAD268F198AACD500638C9C /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 7EAD268E198AACD500638C9C /* libz.dylib */; };
 		84BD5ED721B6564B00D627E2 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84BD5ED621B6564B00D627E2 /* CoreLocation.framework */; };
 		84BD5ED921B6817600D627E2 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84BD5ED821B6817500D627E2 /* AddressBook.framework */; };
+		84C2B27921C8D1B400B47423 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 84C2B27821C8D1B400B47423 /* Main.storyboard */; };
+		84C2B27C21C8E22400B47423 /* MeshListViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B27B21C8E22400B47423 /* MeshListViewController.mm */; };
+		84C2B27F21C8E25D00B47423 /* MeshCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B27E21C8E25D00B47423 /* MeshCollectionViewCell.m */; };
+		84C2B2A421C91F8200B47423 /* STMesh+STMeshCategory.m in Sources */ = {isa = PBXBuildFile; fileRef = 84C2B2A321C91F8200B47423 /* STMesh+STMeshCategory.m */; };
 		84D05A9121B52BEC00CCA744 /* TTOpenInAppActivity.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 84D05A8F21B52BEC00CCA744 /* TTOpenInAppActivity.bundle */; };
 		84D05A9221B52BEC00CCA744 /* TTOpenInAppActivity.m in Sources */ = {isa = PBXBuildFile; fileRef = 84D05A9021B52BEC00CCA744 /* TTOpenInAppActivity.m */; };
 		84D05A9421B52C1B00CCA744 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 84D05A9321B52C1A00CCA744 /* MobileCoreServices.framework */; };
@@ -137,6 +141,13 @@
 		7EAD26A9198B015000638C9C /* CustomUIKitStyles.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = CustomUIKitStyles.h; path = RoomCapture/CustomUIKitStyles.h; sourceTree = "<group>"; };
 		84BD5ED621B6564B00D627E2 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 		84BD5ED821B6817500D627E2 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = System/Library/Frameworks/AddressBook.framework; sourceTree = SDKROOT; };
+		84C2B27821C8D1B400B47423 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		84C2B27A21C8E22400B47423 /* MeshListViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeshListViewController.h; sourceTree = "<group>"; };
+		84C2B27B21C8E22400B47423 /* MeshListViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MeshListViewController.mm; sourceTree = "<group>"; };
+		84C2B27D21C8E25D00B47423 /* MeshCollectionViewCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MeshCollectionViewCell.h; sourceTree = "<group>"; };
+		84C2B27E21C8E25D00B47423 /* MeshCollectionViewCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MeshCollectionViewCell.m; sourceTree = "<group>"; };
+		84C2B2A221C91F8200B47423 /* STMesh+STMeshCategory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "STMesh+STMeshCategory.h"; sourceTree = "<group>"; };
+		84C2B2A321C91F8200B47423 /* STMesh+STMeshCategory.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "STMesh+STMeshCategory.m"; sourceTree = "<group>"; };
 		84D05A8E21B52BEC00CCA744 /* TTOpenInAppActivity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TTOpenInAppActivity.h; sourceTree = "<group>"; };
 		84D05A8F21B52BEC00CCA744 /* TTOpenInAppActivity.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = TTOpenInAppActivity.bundle; sourceTree = "<group>"; };
 		84D05A9021B52BEC00CCA744 /* TTOpenInAppActivity.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TTOpenInAppActivity.m; sourceTree = "<group>"; };
@@ -253,8 +264,14 @@
 				7E2288C8198FE3D300F6E3B2 /* CustomUIKitStyles.mm */,
 				2A35A00E1975B89700D8C0B1 /* AppDelegate.h */,
 				2A35A00F1975B89700D8C0B1 /* AppDelegate.mm */,
+				84C2B27A21C8E22400B47423 /* MeshListViewController.h */,
+				84C2B27B21C8E22400B47423 /* MeshListViewController.mm */,
+				84C2B27D21C8E25D00B47423 /* MeshCollectionViewCell.h */,
+				84C2B27E21C8E25D00B47423 /* MeshCollectionViewCell.m */,
 				2A35A0131975B89F00D8C0B1 /* ViewController.h */,
 				2A35A0141975B89F00D8C0B1 /* ViewController.mm */,
+				84C2B2A221C91F8200B47423 /* STMesh+STMeshCategory.h */,
+				84C2B2A321C91F8200B47423 /* STMesh+STMeshCategory.m */,
 				2AD988C61A643C9D00CB1B94 /* ViewController+OpenGL.h */,
 				2AD988C71A643C9D00CB1B94 /* ViewController+OpenGL.mm */,
 				2AD988C81A643C9D00CB1B94 /* ViewController+CaptureSession.h */,
@@ -289,6 +306,7 @@
 				2A35A0211975B8D100D8C0B1 /* Graphics */,
 				2A35A03C1975B8E800D8C0B1 /* MeshView.xib */,
 				2A35A03E1975B8F600D8C0B1 /* ViewController.xib */,
+				84C2B27821C8D1B400B47423 /* Main.storyboard */,
 				2A35A0441975B90000D8C0B1 /* RoomCapture-Info.plist */,
 				2A35A0461975B90F00D8C0B1 /* InfoPlist.strings */,
 				2A35A0491975B91400D8C0B1 /* main.m */,
@@ -370,6 +388,7 @@
 				2A35A03D1975B8E800D8C0B1 /* MeshView.xib in Resources */,
 				2AEE4CE81A6DE2D100BEB2F9 /* startScanButton@2x.png in Resources */,
 				2A40186C19BA8D1E0000CA48 /* measurementTape.png in Resources */,
+				84C2B27921C8D1B400B47423 /* Main.storyboard in Resources */,
 				2A35A0421975B8F600D8C0B1 /* ViewController.xib in Resources */,
 				2A839F92197F111600A5B817 /* innerCircle@2x.png in Resources */,
 				3F19EC11202A84A900C66C83 /* outerCircle-iphone@1x.png in Resources */,
@@ -407,7 +426,10 @@
 				2D5B8571199CAF7F00F22AB9 /* CustomShaders.mm in Sources */,
 				2A35A04A1975B91400D8C0B1 /* main.m in Sources */,
 				2AD988CE1A643C9D00CB1B94 /* ViewController+CaptureSession.mm in Sources */,
+				84C2B27C21C8E22400B47423 /* MeshListViewController.mm in Sources */,
+				84C2B27F21C8E25D00B47423 /* MeshCollectionViewCell.m in Sources */,
 				2D5B8574199CB4D700F22AB9 /* ViewpointController.mm in Sources */,
+				84C2B2A421C91F8200B47423 /* STMesh+STMeshCategory.m in Sources */,
 				6FAD6839199E8C9700033FCC /* CalibrationOverlay.mm in Sources */,
 				2A35A0181975B8A700D8C0B1 /* MeshViewController.mm in Sources */,
 				84D05A9221B52BEC00CCA744 /* TTOpenInAppActivity.m in Sources */,

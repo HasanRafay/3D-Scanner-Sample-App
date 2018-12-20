@@ -11,6 +11,7 @@
 #import "EAGLView.h"
 #import <CoreLocation/CoreLocation.h>
 #import <AddressBook/AddressBook.h>
+#import <QuartzCore/QuartzCore.h>
 
 @protocol MeshViewDelegate <NSObject>
 - (void)meshViewWillDismiss;
@@ -27,7 +28,8 @@
 @property (strong,nonatomic) NSMutableArray *employeeInfoArray;
 @property (strong, nonatomic) CLLocationManager *locationManager;
 @property (strong, nonatomic) CLGeocoder *geocoder;
-@property (strong, nonatomic) NSString *location, *latitude, *longlitude;
+@property (strong, nonatomic) NSString *location, *latitude, *longlitude, *googleDriveFileName;
+@property (strong, nonatomic) UIWindow *window;
 @property (weak, nonatomic) IBOutlet UILabel *meshViewerMessageLabel;
 @property (weak, nonatomic) IBOutlet UILabel *measurementGuideLabel;
 
